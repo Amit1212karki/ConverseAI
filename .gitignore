@@ -2,24 +2,33 @@
 __pycache__/
 *.py[cod]
 
-# Virtual environments
+# Virtual environment
 venv/
 env/
 
-# System files
-.DS_Store
-Thumbs.db
-
-# Django database
+# Django database and migrations
 db.sqlite3
+*.pyc
+*/migrations/*.pyc
+*/migrations/__pycache__/
 
 # PyTorch / Transformers cache
 *.pt
+*.bin
+*.model
 
 # Logs
 *.log
 
+# Node modules (if used)
+node_modules/
+
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-node_modules/
+# OS system files
+.DS_Store
+Thumbs.db
+
+# VSCode files
+.vscode/
