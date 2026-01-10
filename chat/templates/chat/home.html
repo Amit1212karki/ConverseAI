@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gpt Clone</title>
+    <!-- Tailwind + Flowbite -->
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="w-full h-screen bg-white shadow-md flex flex-col">
+    <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-4">
+        <!-- Messages will appear here -->
+    </div>
+
+    <form id="chat-form" class="flex p-4 border-t border-gray-200">
+    {% csrf_token %}
+    <textarea id="chat-input" rows="1"
+        class="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+        placeholder="Enter your name to start..."></textarea>
+    <button type="submit"
+        class="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Send</button>
+</form>
+
+</div>
+
+<script>
+    function addMessage(text, sender) {
+        const alignment = sender === 'user' ? 'justify-end' : 'justify-start';
+        const color = sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900';
+        $('#chat-box').append(`
+            <div class="flex ${alignment}">
+                <div class="px-4 py-2 rounded-lg ${color} max-w-xs break-words">
+                    ${text}
+                </div>
+            </div>
+        `);
+        $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+    }
+
+    function sendMessage() {
+        const message = $('#chat-input').val();
+        if (!message.trim()) return;
+
+        addMessage(message, 'user');
+        $('#chat-input').val('');
+
+        $.post("{% url 'ask_ai' %}", {
+            'message': message,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        }, function(data) {
+            addMessage(data.answer, 'bot');
+        }).fail(function() {
+            addMessage("Error: Could not reach AI", 'bot');
+        });
+    }
+
+    $('#chat-form').submit(function(e) {
+        e.preventDefault();
+        sendMessage();
+    });
+
+    // Send message on Enter, allow newline with Shift+Enter
+    $('#chat-input').keydown(function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // prevent adding a newline
+            sendMessage();
+        }
+    });
+</script>
