@@ -20,7 +20,7 @@ ConverseAI is a simple AI-powered chatbot built with **Python** and **Hugging Fa
 - Hugging Face Transformers
 - PyTorch
 - Django (or Flask, if web interface used)
-- HTML/CSS/JavaScript for front-end chat UI (if applicable)
+- HTML/CSS/JavaScript for front-end chat UI 
 
 ---
 
