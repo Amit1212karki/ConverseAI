@@ -12,6 +12,8 @@ chat_sessions = {}
 def index(request):
     return render(request, 'chat/home.html')
 
+
+
 def ask_ai(request):
     if request.method == 'POST':
         user_message = request.POST.get('message')
